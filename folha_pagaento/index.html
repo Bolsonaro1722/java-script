@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Calculadora de Folha de Salário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label, input, button, p {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Salário</h2>
+    <label for="salario">Salário Bruto (R$):</label>
+    <input type="number" id="salario" placeholder="Digite seu salário bruto" step="0.01">
+
+    <button onclick="calcularFolha()">Calcular</button>
+
+    <p id="resultado"></p>
+</div>
+
+<script>
+    function calcularFolha() {
+        const salario = parseFloat(document.getElementById("salario").value);
+
+        if (isNaN(salario) || salario <= 0) {
+            alert("Por favor, insira um salário válido.");
+            return;
+        }
+
+        // Calculo do INSS
+        let inss = 0;
+        if (salario <= 1302.00) {
+            inss = salario * 0.075;
+        } else if (salario <= 2571.29) {
+            inss = salario * 0.09;
+        } else if (salario <= 3856.94) {
+            inss = salario * 0.12;
+        } else if (salario <= 7507.49) {
+            inss = salario * 0.14;
+        } else {
+            inss = 7507.49 * 0.14; // Teto máximo do INSS
+        }
+
+        // Calculo do IR (simplificado para exemplo)
+        let ir = 0;
+        if (salario <= 1903.98) {
+            ir = 0;
+        } else if (salario <= 2826.65) {
+            ir = salario * 0.075 - 142.80;
+        } else if (salario <= 3751.05) {
+            ir = salario * 0.15 - 354.80;
+        } else if (salario <= 4664.68) {
+            ir = salario * 0.225 - 636.13;
+        } else {
+            ir = salario * 0.275 - 869.36;
+        }
+
+        // Calculo do Vale Transporte (6% do salário)
+        const valeTransporte = salario * 0.06;
+
+        // Salário Líquido
+        const salarioLiquido = salario - inss - ir - valeTransporte;
+
+        // Exibindo os resultados
+        document.getElementById("resultado").innerHTML = `
+            <strong>Salário Bruto:</strong> R$ ${salario.toFixed(2)} <br>
+            <strong>INSS:</strong> R$ ${inss.toFixed(2)} <br>
+            <strong>IR:</strong> R$ ${ir.toFixed(2)} <br>
+            <strong>Vale Transporte:</strong> R$ ${valeTransporte.toFixed(2)} <br>
+            <strong>Salário Líquido:</strong> R$ ${salarioLiquido.toFixed(2)}
+        `;
+    }
+</script>
+
+</body>
+</html>
